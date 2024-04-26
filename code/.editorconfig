@@ -1,0 +1,5 @@
+[*.{fs,fsx}]
+fsharp_record_multiline_formatter = number_of_items
+fsharp_multi_line_lambda_closing_newline = true
+fsharp_multiline_bracket_style = aligned
+fsharp_experimental_elmish = true
