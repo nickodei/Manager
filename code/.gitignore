@@ -4,8 +4,6 @@
 .idea/
 .ionide/
 .vs/
-.devenv/
-.direnv/
 deploy/
 obj/
 bin/
@@ -18,3 +16,5 @@ release.sh
 *.fsproj.user
 *.DotSettings.user
 *.fs.js
+
+src/Client/output/
