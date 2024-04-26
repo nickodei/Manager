@@ -7,6 +7,7 @@ open Feliz.Router
 open Page
 
 open Manager.Client.Router
+open Manager.Client.Pages
 
 type Model = { CurrentPage: Page }
 
@@ -37,7 +38,7 @@ let view state dispatch =
                 router.children [
                     match state.CurrentPage with
                     | Page.Recepies -> Recepies.View {| api = recepieApi |}
-                    | Page.RecepiesCreate -> Html.h1 "Recepie created"
+                    | Page.RecepiesCreate -> CreateRecepie.View {| api = recepieApi |}
                     | Page.RecepiesEdit guid -> Html.h1 ("Recepie edit: " + guid)
                     | Page.NotFound -> Html.h1 "Page not found!"
                 ]
