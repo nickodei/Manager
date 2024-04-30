@@ -63,6 +63,10 @@
                   CREATE USER api SUPERUSER PASSWORD 'admin';
                 '';
               };
+
+              scripts.clear-postgres.exec = ''
+                rm -rf .devenv/state/postgres/
+              '';
             }
           ];
         };
