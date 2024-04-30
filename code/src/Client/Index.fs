@@ -2,7 +2,8 @@ module Index
 
 open Elmish
 open Fable.Remoting.Client
-open Shared
+open Manager.Shared
+open Manager.Shared.Recepies
 open Feliz.Router
 open Page
 
@@ -39,7 +40,7 @@ let view state dispatch =
                     match state.CurrentPage with
                     | Page.Recepies -> Recepies.View {| api = recepieApi |}
                     | Page.RecepiesCreate -> CreateRecepie.View {| api = recepieApi |}
-                    | Page.RecepiesEdit guid -> Html.h1 ("Recepie edit: " + guid)
+                    | Page.RecepiesEdit guid -> Html.h1 ("Recepie edit: " + guid.ToString())
                     | Page.NotFound -> Html.h1 "Page not found!"
                 ]
             ]

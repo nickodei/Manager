@@ -4,18 +4,19 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 open Microsoft.AspNetCore.Http
 
-open Shared
+open Manager.Shared
+open Manager.Shared.Recepies
 
 module Mappers =
-    let toRecepieOverview (recepie: Manager.Recepies.DomainTypes.Recepie) : RecepieOverview =
+    let toRecepieOverview (recepie: Manager.Recepies.DomainTypes.Recepie) : RecepieInfoDto =
         let (Manager.Recepies.DomainTypes.RecepieId id) = recepie.Id
 
         {
-            Id = id.ToString()
-            Title = recepie.Title
+            Id = id
+            Title = recepie.Name
         }
 
-open Common.Database
+open Manager.Server.Database
 open Recepie.Repository
 
 let create api =
@@ -24,16 +25,32 @@ let create api =
     |> Remoting.fromContext api
     |> Remoting.buildHttpHandler
 
-let getRecepies dbContext =
-    task { return readAll dbContext |> Seq.map Mappers.toRecepieOverview }
+let getRecepieById dbContext recepieId =
+    async {
+        let! recepie = getById dbContext recepieId
+        return recepie
+    }
 
-let createRecepie newRecepie dbContext =
-    task { return createRecepie newRecepie dbContext }
+let getRecepies dbContext =
+    async {
+        let! recepies = readAll dbContext
+
+        return
+            recepies
+            |> Seq.map (fun recepie ->
+                {
+                    Id = recepie.recepie_id
+                    Title = recepie.name
+                }
+            )
+    }
+
+let createRecepie (newRecepie: CreateRecepieCommand) dbContext =
+    async { do! createRecepie newRecepie dbContext |> Async.Ignore }
 
 let recepiesApi (context: HttpContext) =
-    let dbContext = Database.createContext Database.connectionString
-
     {
-        getRecepies = fun () -> getRecepies dbContext |> Async.AwaitTask
-        createRecepie = fun (newRecepie) -> createRecepie newRecepie dbContext |> Async.AwaitTask
+        getRecepieById = fun (recepieId) -> getRecepieById (openContext ()) recepieId
+        getRecepieInfos = fun () -> getRecepies (openContext ())
+        createRecepie = fun (newRecepie) -> createRecepie newRecepie (openContext ())
     }

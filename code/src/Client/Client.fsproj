@@ -10,6 +10,7 @@
     <Compile Include="components/recepies/RecepieCard.fs" />
     <Compile Include="pages/Recepies.fs" />
     <Compile Include="pages/CreateRecepies.fs" />
+    <Compile Include="pages/EditRecepie.fs" />
     <Compile Include="Index.fs" />
     <Compile Include="App.fs" />
     <None Include="vite.config.mts" />
@@ -29,4 +30,5 @@
     <PackageReference Include="Feliz.Router" Version="4.0.0" />
     <PackageReference Include="Feliz.UseElmish" Version="2.5.0" />
   </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

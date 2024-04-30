@@ -1,30 +1,29 @@
 module Page.Recepies
 
 open Elmish
-open Shared
+open Manager.Shared.Recepies
 
 open Manager.Client.Router
 open Components.Recepie
 
-
 type Model =
     {
-        Recepies: RecepieOverview seq
-        NewRecepie: NewRecepie option
+        Recepies: RecepieInfoDto seq
+        NewRecepie: CreateRecepieCommand option
     }
 
 type Message =
     | LoadRecepies
-    | RecepiesLoaded of RecepieOverview seq
+    | RecepiesLoaded of RecepieInfoDto seq
     | SetTitle of string
-    | CreateRecepie of NewRecepie option
+    | CreateRecepie of CreateRecepieCommand option
     | RecepieCreated of unit
 
 let createRecepieCommand api newRecepie =
     Cmd.OfAsync.perform api.createRecepie newRecepie RecepieCreated
 
 let loadRecepies api =
-    Cmd.OfAsync.perform api.getRecepies () RecepiesLoaded
+    Cmd.OfAsync.perform api.getRecepieInfos () RecepiesLoaded
 
 let init =
     let model =
@@ -63,16 +62,21 @@ open Feliz.DaisyUI
 
 [<ReactComponent>]
 let View (props: {| api: IRecepieApi |}) =
-    let model, dispatch = React.useElmish (init, update props.api, [||])
+    let model, _ = React.useElmish (init, update props.api, [||])
 
     Html.div [
-        prop.classes [ "grid"; "grid-cols-4"; "gap-4" ]
         prop.children [
-            for recepie in model.Recepies do
-                RecepieCard.View {| recepie = recepie |}
-            Daisy.button.button [
-                prop.onClick (fun (_) -> Router.navigatePage Page.RecepiesCreate)
-                prop.text "New Recepie"
+            Html.h1 "Recepies"
+            Html.div [
+                prop.classes [ "grid"; "grid-cols-4"; "gap-4" ]
+                prop.children [
+                    for recepie in model.Recepies do
+                        RecepieCard.View {| recepie = recepie |}
+                    Daisy.button.button [
+                        prop.onClick (fun (_) -> Router.navigatePage Page.RecepiesCreate)
+                        prop.text "New Recepie"
+                    ]
+                ]
             ]
         ]
     ]

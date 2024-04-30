@@ -5,15 +5,21 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common/Database.fs" />
+    <Compile Include="Database/DatabaseTypes.fs">
+      <Visible>False</Visible>
+    </Compile>
+    <Compile Include="Database/Database.fs" />
     <Compile Include="Recepies/DomainTypes.fs" />
     <Compile Include="Recepies/RecepieRepository.fs" />
-    <Compile Include="Storage.fs" />
     <Compile Include="Endpoints/RecepiesApi.fs" />
     <Compile Include="Server.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.fsproj" />
   </ItemGroup>
+  <!-- Regenerate entities on Rebuild in Debug mode -->
+  <Target Name="SqlHydra" BeforeTargets="Clean" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="dotnet sqlhydra npgsql" />
+  </Target>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

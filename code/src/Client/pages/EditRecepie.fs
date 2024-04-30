@@ -1,4 +1,4 @@
-module Manager.Client.Pages.CreateRecepie
+module Manager.Client.Pages.EditRecepie
 
 open Elmish
 open Manager.Shared.Recepies
